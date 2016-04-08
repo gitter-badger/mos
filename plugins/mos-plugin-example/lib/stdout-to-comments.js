@@ -118,8 +118,8 @@ function outputSemanticPosition (ast, pos) {
 }
 
 function addHook (opts) {
-  if (!opts.code.match(/['"]use strict['"]/)) {
-    return `require('${hookPath}')('${opts.filePath}');\n` + opts.code
-  }
-  return `'use strict';require('${hookPath}')('${opts.filePath}');\n` + opts.code
+  const useStrict = !!opts.code.match(/['"]use strict['"]/)
+  return (useStrict ? "'use strict';" : '') +
+    `require('${hookPath}')('${opts.filePath}');try{\n` + opts.code +
+    '\n}catch(err){}'
 }

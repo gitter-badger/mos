@@ -9,7 +9,7 @@ const originalLog = console.log
 
 function hookConsoleLog (filePath) {
   console.log = function () {
-    const site = callsiteForFile(filePath)
+    const site = getCallsiteForFile(callsites(), filePath)
 
     originalLog('\n$\n' + JSON.stringify({
       message: getRealConsoleOutput.apply(null, arguments),
@@ -32,13 +32,13 @@ function getRealConsoleOutput () {
   return removeLastEOL(message)
 }
 
-function callsiteForFile (fileName) {
-  const stack = trace()
+function getCallsiteForFile (callsites, fileName) {
+  const stack = trace(callsites)
   return stack.find(callsite => callsite.file === fileName)
 }
 
-function trace () {
-  return callsites().map(callsite => ({
+function trace (callsites) {
+  return callsites.map(callsite => ({
     file: normalizePath(callsite.getFileName()) || '?',
     line: callsite.getLineNumber(),
     column: callsite.getColumnNumber(),

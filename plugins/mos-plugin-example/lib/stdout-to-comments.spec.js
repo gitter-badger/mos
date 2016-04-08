@@ -198,4 +198,11 @@ describe('stdoutToComments', () => {
       ].join('\n'))
     )
   })
+
+  it.skip('should add the unhandled exception to the comments', () => {
+    return inlineStdoutToComments("throw 'foo'")
+      .then(actual =>
+        expect(actual).to.eq("throw 'foo'\n//> Error: foo")
+      )
+  })
 })
